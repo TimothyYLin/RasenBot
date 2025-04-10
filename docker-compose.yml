@@ -1,14 +1,32 @@
 services:
-  # First container being created for application runtime
+  mongodb:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  # Container being created for application runtime
   bot:
     build: # Build this container following Dockerfile under ./bot
       context: ./bot
       dockerfile: Dockerfile
     environment: # Set environment variables in container based on .env
       - RASENBOT_TOKEN=${RASENBOT_TOKEN}
+      - MONGO_URI=mongodb://${MONGODB_ROOT_USERNAME}:${MONGODB_ROOT_PASSWORD}@mongodb:27017/
+    depends_on:
+      mongodb:
+        condition: service_started
+    command: ["sh", "-c", "/app/wait-for-mongo.sh"]
     restart: unless-stopped
     develop: # Used for ease of development to automatically sync files/restart container
       watch:
         - action: sync+restart
           path: ./bot
           target: /app
+
+volumes:
+  mongodb_data:
