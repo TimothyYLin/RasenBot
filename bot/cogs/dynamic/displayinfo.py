@@ -6,26 +6,30 @@ from discord.ext import commands
 # from datetime import datetime
 # from datetime import date
 # import datetime as dt
-# from pymongo.mongo_client import MongoClient
+from pymongo.mongo_client import MongoClient
 # from pymongo.server_api import ServerApi
 # import asyncio
+import os
+from dotenv import load_dotenv
 
 
 
-
-# # Create a new client and connect to the MongoDB server
+# Create a new client and connect to the MongoDB server
+load_dotenv()
+mongoUri = os.getenv("MONGO_URI")
+mongoClient = MongoClient(mongoUri)
 # mongoClient = MongoClient(mongoDB.MONGODB_URI, server_api=ServerApi('1'))
 
 
-# try:
-#     # Send a ping to confirm a successful connection to MongoDB
-#     mongoClient.admin.command('ping')
-#     print("Pinged your deployment. You successfully connected to MongoDB!")
-# except Exception as e:
-#     print(e)
+try:
+    # Send a ping to confirm a successful connection to MongoDB
+    mongoClient.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
-# # Select the database
-# db = mongoClient.Rasenbot
+# Select the database
+db = mongoClient.Rasenbot
 
 
 

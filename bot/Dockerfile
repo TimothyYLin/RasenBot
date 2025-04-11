@@ -4,6 +4,8 @@ USER app
 
 WORKDIR /app
 COPY --chown=app:app . /app
+RUN chmod +x /app/wait-for-mongo.sh
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "-u", "main.py"]

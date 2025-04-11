@@ -48,8 +48,9 @@ class MoveUsers(commands.Cog):
 
     # Command function that moves one user from one voice channel to another specified by a user
     @commands.command()
-    async def move(self, ctx, member: discord.Member, channel: str):
-        destination_channel = self._find_similar_channel(channel, ctx.guild.voice_channels)
+    async def move(self, ctx, member: discord.Member, *channel: str):
+        channel_name = " ".join(channel)
+        destination_channel = self._find_similar_channel(channel_name, ctx.guild.voice_channels)
         await member.move_to(destination_channel)
 
     # Command function that auto moves users to various different channels depending on activities of all users in all voice channels
@@ -136,9 +137,6 @@ class MoveUsers(commands.Cog):
                         await self._move_users_to_channel_by_id(members_to_move, destination_channel.id)
                 
                 # elif len(voice_channel_groups[channel]) >= 4:  # Multiple activities being played
-
-
-
 
         else:
             print("Auto move flag set to False. Set to True in constants.py if you want to use auto move ability")    

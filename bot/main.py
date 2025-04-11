@@ -1,5 +1,6 @@
 import os
 import asyncio
+
 from dotenv import load_dotenv
 from discord import Intents
 from discord.ext import commands
@@ -18,15 +19,17 @@ bot = commands.Bot(command_prefix='$', intents=intents)
 async def on_ready():
     print("Rasenbot is running...")
 
-async def load_extensions():
-    for file in os.listdir('./cogs'):
-        if file.endswith(".py"):
-            await bot.load_extension(f'cogs.{file[:-3]}')
+async def load_core_cogs():
+    for file in os.listdir('./cogs/core'):
+        if file.endswith(".py") and not file.startswith("__"):
+            await bot.load_extension(f'cogs.core.{file[:-3]}')
 
 async def main():
     token = os.getenv("RASENBOT_TOKEN")
+    if not token:
+        exit()
     async with bot:
-        await load_extensions()
+        await load_core_cogs()
         await bot.start(token)
 
 asyncio.run(main())
